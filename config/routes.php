@@ -14,13 +14,13 @@ function addRoute(string $controller, string $method): array
 }
 
 return [
-    '/usuarios' => [
+    'usuarios' => [
         'GET' => addRoute(UserController::class, 'list'),
         'DELETE' => addRoute(UserController::class, 'remove'),
         'POST' => addRoute(UserController::class, 'add'),
     ],
 
-    '/roles' => [
+    'roles' => [
         'GET' => addRoute(RoleController::class, 'list'),
         'POST' => addRoute(RoleController::class, 'add'),
         'PATCH' => addRoute(RoleController::class, 'edit'),

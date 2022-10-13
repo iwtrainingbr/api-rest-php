@@ -7,7 +7,7 @@ include dirname(__DIR__).'/vendor/autoload.php';
 header('Content-Type: application/json');
 
 //recuperando a URL/endpoint que o cliente está acessando
-$url = $_SERVER['REQUEST_URI'];
+$url = explode('/', $_SERVER['REQUEST_URI'])[1];
 
 //recuperando o metodo http usado pelo cliente
 $httpMethod = $_SERVER['REQUEST_METHOD'];

@@ -7,20 +7,24 @@ namespace App\Controller;
 use App\Connection\DatabaseConnection;
 use App\Entity\Role;
 use App\Response\JsonResponse;
+use Doctrine\ORM\EntityManager;
 
 class RoleController
 {
+    private EntityManager $em;
+
+    public function __construct() 
+    {
+        $this->em = DatabaseConnection::getEntityManager();
+    }
+
     public function list(): void
     {
-        $em = DatabaseConnection::getEntityManager();
+        $repository = $this->em->getRepository(Role::class);
 
-        $repository = $em->getRepository(Role::class);
-
-        $roles = $repository->findAll(); // SELECT * FROM Role;
-
-        echo json_encode($roles);
-
-        JsonResponse::success();
+        JsonResponse::success(
+            $repository->findAll()
+        );
     }
 
     public function add(): void
@@ -31,27 +35,22 @@ class RoleController
         ); 
 
         //criando um objeto do PHP e passando os dados recebidos via request POST
-        $role = new Role();
-        $role->setName($body->name);
+        $role = new Role($body->name);
 
         //salvando no banco de dados
-        $em = DatabaseConnection::getEntityManager();
-        $em->persist($role); //INSERT INTO 
-        $em->flush();
+        $this->em->persist($role); //INSERT INTO 
+        $this->em->flush();
 
-        //mostrando na resposta o resultado
-        echo json_encode($role);
-
-        JsonResponse::success(201);
+        JsonResponse::success($role, 201);
     }
 
     public function edit(): void
     {
-        JsonResponse::success(201);
+        JsonResponse::success(null, 201);
     }
 
     public function remove(): void
     {
-        JsonResponse::success(204);
+        JsonResponse::success(code: 204);
     }
 }

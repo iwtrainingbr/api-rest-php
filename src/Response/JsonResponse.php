@@ -6,8 +6,12 @@ namespace App\Response;
 
 class JsonResponse
 {
-    public static function success(int $httpCode = 200): void
+    public static function success(mixed $data = null, int $code = 200): void
     {
-        header('HTTP CODE', true, $httpCode);
+        if (null !== $data) {
+            echo json_encode($data);
+        }
+
+        header('HTTP CODE', true, $code);
     }
 }

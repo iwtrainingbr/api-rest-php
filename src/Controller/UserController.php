@@ -4,29 +4,56 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-class UserController
+use App\Connection\DatabaseConnection;
+use App\Entity\Role;
+use App\Entity\User;
+use App\Response\JsonResponse;
+use Doctrine\ORM\EntityManager;
+use Doctrine\Persistence\ObjectRepository;
+
+class UserController extends AbstractController
 {
+    private EntityManager $em;
+    private ObjectRepository $repository;
+    private ObjectRepository $roleRepository;
+
+    public function __construct()
+    {
+        $this->em = DatabaseConnection::getEntityManager();
+        $this->repository = $this->em->getRepository(User::class);
+        $this->roleRepository = $this->em->getRepository(Role::class);
+    }
+
     public function list(): void
     {
-        $usuarioTeste = [
-            'name' => 'Chiquim',
-            'email' => 'chiquim@email.com',
-        ];
-
-        echo json_encode([
-            $usuarioTeste,
-            $usuarioTeste,
-            $usuarioTeste,
-        ]);
+        JsonResponse::success(
+            $this->repository->findAll()
+        );
     }
 
     public function add(): void
     {
-        header('HTTP CODE', true, 201);
+        $body = $this->getRequestBody();
 
-        echo json_encode([
-            'message' => 'Usuario cadastrado',
-        ]);
+        $password = password_hash($body->password, PASSWORD_ARGON2I);
+
+        //criando o novo usuario
+        $user = new User(
+            $body->name,
+            $body->email,
+            $password
+        );
+
+        //buscando o role do id recebido no json
+        $user->role = $this->roleRepository->find(
+            $body->role
+        );
+
+        //salvando o usuario
+        $this->em->persist($user);
+        $this->em->flush();
+
+        JsonResponse::success($user);
     }
 
     public function remove(): void

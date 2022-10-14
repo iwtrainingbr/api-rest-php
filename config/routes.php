@@ -17,6 +17,7 @@ return [
     'usuarios' => [
         'GET' => addRoute(UserController::class, 'list'),
         'DELETE' => addRoute(UserController::class, 'remove'),
+        'PATCH' => addRoute(UserController::class, 'edit'),
         'POST' => addRoute(UserController::class, 'add'),
     ],
 

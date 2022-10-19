@@ -21,6 +21,9 @@ class User
     #[ORM\Column()]
     public string $password;
 
+    #[ORM\Column(nullable: true)]
+    public ?string $token;
+
     #[ORM\ManyToOne(targetEntity: Role::class)]
     #[ORM\JoinColumn(name: 'role_id', referencedColumnName: 'id')]
     public Role $role;

@@ -14,4 +14,14 @@ class JsonResponse
 
         header('HTTP CODE', true, $code);
     }
+
+    public static function error(string $message, array $data = [], int $code = 400): void
+    {
+        echo json_encode([
+            'error' => $message,
+            'details' => $data,
+        ]);
+
+        header('HTTP CODE', true, $code);
+    }
 }

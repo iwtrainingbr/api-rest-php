@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Controller\Admin\RoleAdminController;
+use App\Controller\AuthController;
 use App\Controller\RoleController;
 use App\Controller\UserController;
 
@@ -14,6 +16,23 @@ function addRoute(string $controller, string $method): array
 }
 
 return [
+    'admin' => [
+        'GET' => addRoute(RoleAdminController::class, 'list'),
+    ],
+
+    'login' => [
+        'GET' => addRoute(RoleAdminController::class, 'login'),
+        'POST' => addRoute(RoleAdminController::class, 'login'),
+    ],
+
+    'logout' => [
+        'GET' => addRoute(RoleAdminController::class, 'logout'),
+    ],
+
+    'auth' => [
+        'POST' => addRoute(AuthController::class, 'login'),
+    ],
+
     'usuarios' => [
         'GET' => addRoute(UserController::class, 'list'),
         'DELETE' => addRoute(UserController::class, 'remove'),

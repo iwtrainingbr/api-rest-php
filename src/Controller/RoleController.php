@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Connection\DatabaseConnection;
 use App\Entity\Role;
 use App\Response\JsonResponse;
+use App\Validator\RoleValidator;
 use Doctrine\ORM\EntityManager;
 use Doctrine\Persistence\ObjectRepository;
 
@@ -23,6 +24,7 @@ class RoleController extends AbstractController
 
     public function list(): void
     {
+
         //se houver um id na URL, então é pra buscar apenas o elemento desse id, e retornar via JSON
         if ($this->getId()) {
             JsonResponse::success(
@@ -40,6 +42,14 @@ class RoleController extends AbstractController
     {
         //recuperando o json enviado pelo cliente
         $body = $this->getRequestBody();
+
+        try {
+            RoleValidator::validatePost($body);
+        } catch (\Exception $exception) {
+            JsonResponse::error($exception->getMessage());
+            return;
+        } 
+
 
         //criando um objeto do PHP e passando os dados recebidos via request POST
         $role = new Role($body->name);
